@@ -1,0 +1,6 @@
+4.0.05d
+Fixed: sync by SKU only request
+ - fnac.webservice.class.php line 405
+ - products.php line 429
+
+- FIX : Extra closing HTML tag in product sheet extension, caused compilation errors

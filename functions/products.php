@@ -384,24 +384,6 @@ class FNAC_SynchOffers extends FNAC
 
                             $qty = $details->quantity;
 
-                            // use the product reference, ignore ean13
-                            /*if (!$details->ean13) {
-                                if ($debug) {
-                                    printf('Product %s(%d/%d) has no EAN13, skipped'.$cr, $details->reference, $details->id, $id_product_attribute);
-                                }
-                                continue;
-                            }*/
-
-                            if (!FNAC_Tools::EAN_UPC_Check($details->ean13)) {
-                                printf($this->l('Inconsistency for product %s(%d/%d) - Product EAN/UPC(%s) seems to be wrong - Skipping product').$cr, $details->reference, $details->id, $id_product_attribute, $details->ean13);
-                                continue;
-                            }
-
-                            if (FNAC_Tools::EAN_UPC_isPrivate($details->ean13)) {
-                                printf($this->l('Inconsistency for product %s(%d/%d) - Product EAN/UPC(%s) is reserved for private use - Skipping product').$cr, $details->reference, $details->id, $id_product_attribute, $details->ean13);
-                                continue;
-                            }
-
                             if ($details->quantity < $outOfStock && !$force) {
                                 if ($debug) {
                                     printf('Product %s(%d/%d) outOfStock'.$cr, $details->reference, $details->id, $id_product_attribute);

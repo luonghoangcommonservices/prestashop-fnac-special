@@ -81,7 +81,6 @@ class FNAC_SynchOffers extends FNAC
 
         $productsUpdate = array();
         $productsDelete = array();
-        $u = $d = 0;
 
         $only_active = false;
         $only_in_stock = false;
@@ -243,7 +242,11 @@ class FNAC_SynchOffers extends FNAC
                 foreach ($categories as $key => $categorieId) {
                     $products = new FNAC_Product(null, true, $fnac_id_lang);
 
-                    $p = $products->productsBetween($fnac_id_lang, $dateFrom, $dateTo, $categorieId);
+                    $p = $products->productsBetween($fnac_id_lang, $dateFrom, $dateTo, $categorieId, $only_active);
+
+                    if ($debug) {
+                        print_r($p);
+                    }
 
                     foreach ($p as $key => $val) {
                         $id = $val['id_product'];
@@ -259,6 +262,9 @@ class FNAC_SynchOffers extends FNAC
                         // Product Options
                         //
                         $options = Fnac_Product::getProductOptions($id, $fnac_id_lang);
+                        if ($debug) {
+                            print_r($options);
+                        }
 
                         $disabled = $options['disable'] ? true : false;
                         $force = $options['force'] ? true : false;
@@ -378,12 +384,13 @@ class FNAC_SynchOffers extends FNAC
 
                             $qty = $details->quantity;
 
-                            if (!$details->ean13) {
+                            // use the product reference, ignore ean13
+                            /*if (!$details->ean13) {
                                 if ($debug) {
                                     printf('Product %s(%d/%d) has no EAN13, skipped'.$cr, $details->reference, $details->id, $id_product_attribute);
                                 }
                                 continue;
-                            }
+                            }*/
 
                             if (!FNAC_Tools::EAN_UPC_Check($details->ean13)) {
                                 printf($this->l('Inconsistency for product %s(%d/%d) - Product EAN/UPC(%s) seems to be wrong - Skipping product').$cr, $details->reference, $details->id, $id_product_attribute, $details->ean13);
@@ -433,18 +440,17 @@ class FNAC_SynchOffers extends FNAC
                             if ($qty <= 0 && !$force) {
                                 $productsDelete[$d] = array(
                                     'id' => $details->reference,
-                                    'ean' => $details->ean13,
+                                    //'ean' => $details->ean13,
                                     'condition' => $condition,
                                     'qty' => $qty,
                                     'price' => $newPrice,
                                     'delete' => 1,
                                     'comment' => '',
                                 );
-                                $d++;
                             } else {
                                 $productsUpdate[$u] = array(
                                     'id' => $details->reference,
-                                    'ean' => $details->ean13,
+                                    //'ean' => $details->ean13,
                                     'condition' => $condition,
                                     'qty' => $qty,
                                     'description' => $text,
@@ -458,7 +464,6 @@ class FNAC_SynchOffers extends FNAC
                                     'time_to_ship' => $time_to_ship,
                                     'reference' => $reference,
                                 );
-                                $u++;
                             }
                         }
                     }
@@ -495,8 +500,8 @@ class FNAC_SynchOffers extends FNAC
                     }
                 }
 
-                if ($d) {
-                    printf($this->l('Inactives/Out Of Stock/Sold: %s offers to delete').$cr, count($d));
+                if (count($productsDelete)) {
+                    printf($this->l('Inactives/Out Of Stock/Sold: %s offers to delete').$cr, count($productsDelete));
 
                     if ($fnac->BatchOfferUpdate($productsDelete)) {
                         printf($this->l('%s delete products').$cr, count($productsDelete));
@@ -514,6 +519,9 @@ class FNAC_SynchOffers extends FNAC
                     $products = new FNAC_Product(null, true, $this->id_lang);
 
                     $p = $products->productsBetween($fnac_id_lang, $dateFrom, $dateTo, $categorieId, $only_active);
+                    if ($debug) {
+                        print_r($p);
+                    }
 
                     if (count($p)) {
                         printf($this->l('Categorie : %s, %s products to update').$cr, $categorie->name, count($p));

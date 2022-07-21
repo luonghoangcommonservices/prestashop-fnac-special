@@ -113,7 +113,7 @@ class Fnac extends Module
         $this->name = 'fnac';
         $this->page = basename(__FILE__, '.php');
         $this->tab = 'market_place';
-        $this->version = '4.0.05';
+        $this->version = '4.0.06';
         $this->author = 'Common-Services';
         $this->module_key = 'e304c6dc71dd3c5afbe63100548ae0a6';
 

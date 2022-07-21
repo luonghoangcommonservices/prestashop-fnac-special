@@ -1,3 +1,6 @@
+4.0.06d
+Fixed: Product Update: Doesn't skip product hasn't EAN13
+
 4.0.05d
 Fixed: sync by SKU only request
  - fnac.webservice.class.php line 405

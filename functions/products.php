@@ -384,7 +384,7 @@ class FNAC_SynchOffers extends FNAC
 
                             $qty = $details->quantity;
 
-                            if ($details->quantity < $outOfStock && !$force) {
+                            if ($qty < $outOfStock && !$force) {
                                 if ($debug) {
                                     printf('Product %s(%d/%d) outOfStock'.$cr, $details->reference, $details->id, $id_product_attribute);
                                 }
@@ -420,7 +420,7 @@ class FNAC_SynchOffers extends FNAC
                             // !FIX Boutique mesvyniles.fr
 
                             if ($qty <= 0 && !$force) {
-                                $productsDelete[$d] = array(
+                                $productsDelete[] = array(
                                     'id' => $details->reference,
                                     //'ean' => $details->ean13,
                                     'condition' => $condition,
@@ -430,7 +430,7 @@ class FNAC_SynchOffers extends FNAC
                                     'comment' => '',
                                 );
                             } else {
-                                $productsUpdate[$u] = array(
+                                $productsUpdate[] = array(
                                     'id' => $details->reference,
                                     //'ean' => $details->ean13,
                                     'condition' => $condition,

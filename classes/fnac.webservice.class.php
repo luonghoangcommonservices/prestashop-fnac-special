@@ -723,7 +723,7 @@ class FnacAPI extends Module
                     $xml->$service->offer[$i]->product_reference->addAttribute('type', 'Ean');
                 }*/
                 if (isset($product['reference']) && !empty($product['reference'])) {
-                    $xml->$service->offer[$i]->addChild('product_reference', $product['reference']);
+                    $xml->$service->offer[$i]->addChild('product_reference', $product['id']);
                     $xml->$service->offer[$i]->product_reference->addAttribute('type', 'PartnerId');
                 }
                 // !FIX Boutique mesvyniles.fr
